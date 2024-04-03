@@ -1,5 +1,5 @@
 "use client";
-import React, { Key } from "react";
+import React, { Key, useEffect } from "react";
 import {
   Table,
   TableHeader,
@@ -25,6 +25,8 @@ import {
 import { SearchIcon } from "../../icons/SearchIcon";
 import { columns, users } from "./components/data";
 import { DeleteIcon } from "../../icons/DeleteIcon";
+import useUserInfo from "../../hooks/useUserInfo";
+import { useRouter } from "next/navigation";
 
 interface userType {
   id: number;
@@ -32,6 +34,19 @@ interface userType {
 }
 
 export default function App() {
+  const router = useRouter();
+  const userInfo = useUserInfo();
+  const isAdmin = userInfo?.permission === "admin";
+  // 防止非管理员通过直接输入路由进入管理页面
+  useEffect(() => {
+    console.log(isAdmin, userInfo);
+    if (userInfo) {
+      if (!isAdmin) {
+        router.push("/main");
+      }
+    }
+  }, [userInfo]);
+
   // input value
   const [filterValue, setFilterValue] = React.useState("");
   // selected columns
