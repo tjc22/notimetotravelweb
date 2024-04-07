@@ -16,7 +16,7 @@ const Main = () => {
       </Link>
       {isAdmin && (
         <Link
-          href={"/main/check"}
+          href={"/main/authy"}
           className="text-[14px] sm:text-sm md:text-xl lg:text-2xl font-bold py-1 sm:py-3 px-2 sm:px-10 rounded-full text-white bg-primary-500 w-[40%] sm:w-[30%] max-w-[300px] text-center"
         >
           <span className=" text-center w-full">管理审核人员→</span>

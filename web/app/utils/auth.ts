@@ -1,5 +1,11 @@
 import axios from "axios";
 import { error, success } from "./message";
+import test from "./test";
+
+const info={
+  domainName:'ctrip.x3322.net',
+  port:'3000',
+}
 
 async function signInClicked(username: string, password: string) {
   try {
@@ -20,30 +26,7 @@ async function logoutClicked() {
 }
 
 async function getUserInfo() {
-  let isLogin = true;
-  let userId = "None";
-  let userName = "None";
-  let permission = "admin";
-
-  if (isLogin) {
-    userId = ""; //get session
-    try {
-      const response = await axios.get(`...`, {
-        headers: {
-          Authorization: "Basic ZGV2OmRlY29kYQ==",
-        },
-      });
-
-      if (response.data) {
-        userName = response.data.userName;
-        permission = response.data.permission;
-      }
-    } catch (err: any) {
-      error(err);
-    }
-  }
-
-  return { isLogin, userId, userName, permission };
+  
 }
 
 export { logoutClicked, signInClicked, getUserInfo };
