@@ -1,18 +1,39 @@
 import axios from "axios";
 import { error, success } from "./message";
-import test from "./test";
-
-const info={
-  domainName:'ctrip.x3322.net',
-  port:'3000',
-}
 
 async function signInClicked(username: string, password: string) {
   try {
-    // login
-    // success('登录成功')
-    // error('登录失败')
-    return "success";
+    console.log(`${process.env.NEXT_PUBLIC_HOST}`);
+    axios
+      .post(`${process.env.NEXT_PUBLIC_HOST}/login`, {
+        username: username,
+        password: password,
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          success("登陆成功");
+          localStorage.setItem(
+            "userInfo",
+            JSON.stringify({
+              username: username,
+              permission: res.data.permission,
+              userId: res.data.reviewerId,
+            })
+          );
+          localStorage.setItem("Authorization", res.data.token);
+          return "success";
+        } else {
+          error("登录失败！");
+          if (res.status === 401) {
+            console.log(res.data?.msg);
+          }
+        }
+      })
+      .catch((err: any) => {
+        console.log("signin: ", err);
+        error("Signin Error: " + err);
+      });
+    return "failed";
   } catch (err: any) {
     console.log("signin: ", err);
     error("Signin Error: " + err);
@@ -20,13 +41,9 @@ async function signInClicked(username: string, password: string) {
 }
 
 async function logoutClicked() {
-  // localStorage.removeItem('userInfo');
-  // await Session.signOut();
-  // window.location.href = '/';
+  localStorage.removeItem("userInfo");
+  localStorage.removeItem("Authorization");
+  window.location.href = "/";
 }
 
-async function getUserInfo() {
-  
-}
-
-export { logoutClicked, signInClicked, getUserInfo };
+export { logoutClicked, signInClicked };

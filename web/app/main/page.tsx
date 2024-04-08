@@ -1,6 +1,6 @@
 "use client";
 import useUserInfo from "../hooks/useUserInfo";
-import { Button, Link } from "@nextui-org/react";
+import { Link } from "@nextui-org/react";
 
 const Main = () => {
   const userInfo = useUserInfo();
