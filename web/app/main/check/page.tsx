@@ -35,7 +35,9 @@ import { columns, notes, statusOptions } from "./components/data";
 import { EditIcon } from "../../icons/EditIcon";
 import { DeleteIcon } from "../../icons/DeleteIcon";
 import { EyeIcon } from "../../icons/EyeIcon";
-import Image from 'next/image';
+import Image from "next/image";
+import API from "@/app/utils/api";
+import { error, success } from "@/app/utils/message";
 
 interface noteType {
   noteId: number;
@@ -53,7 +55,13 @@ const statusColorMap = {
   waiting: "primary",
 };
 
-const INITIAL_VISIBLE_COLUMNS = ["authorNickname", "title", "uploadTime", "status", "actions"];
+const INITIAL_VISIBLE_COLUMNS = [
+  "authorNickname",
+  "title",
+  "uploadTime",
+  "status",
+  "actions",
+];
 
 export default function App() {
   // input value
@@ -119,7 +127,10 @@ export default function App() {
   }, [notes, filterValue, statusFilter]);
 
   const headerColumns = React.useMemo(() => {
-    if (visibleColumns.size >= filteredItems.length || `${visibleColumns}` === "all")
+    if (
+      visibleColumns.size >= filteredItems.length ||
+      `${visibleColumns}` === "all"
+    )
       return columns;
 
     return columns.filter((column) =>
@@ -146,8 +157,61 @@ export default function App() {
     });
   }, [sortDescriptor, items]);
 
+  interface noteDetailsType {
+    noteTitle: string;
+    noteContent: string;
+    authorNickname: string;
+    lastModifyTime: string; //TODO:questioned
+    location: string;
+    status: "waiting" | "approved" | "disapproved" | "delete";
+    resources: Array<{ mediaType: "img" | "video"; url: string }>;
+  }
+
+  const [noteDetails, setNoteDetails] = React.useState({
+    noteTitle: "noteTitle",
+    noteContent: "noteContent",
+    authorNickname: "authorNickname",
+    lastModifyTime: "lastModifyTime", //TODO:questione
+    location: "location",
+    status: "waiting",
+    resources: [
+      {
+        mediaType: "img",
+        url: "https://timelord.cn/Nicholas/img/drawing/3.jpg",
+      },
+      {
+        mediaType: "img",
+        url: "https://timelord.cn/Nicholas/img/drawing/3.jpg",
+      },
+    ],
+  });
   const handleViewDetails = (id: number) => {
-    console.log(id);
+    // console.log(id);
+    try {
+      API.CheckServiceApi.getNoteInfo(id)
+        .then((res) => {
+          if (res.status === 200) {
+            if (res.data.status === 200) {
+              if (res.data.content) setNoteDetails(res.data.content);
+              if (res.data.freshToken)
+                localStorage.setItem("Authorization", res.data.freshToken);
+              success("获取游记详情成功");
+            } else {
+              error("获取游记详情失败！");
+              if (res.data.status === 401) {
+                console.log(res.data?.msg);
+              }
+            }
+          }
+        })
+        .catch((err: any) => {
+          console.log("Get Note Info Error: ", err);
+          error("Get Note Info Error: " + err);
+        });
+    } catch (err: any) {
+      console.log("Get Note Info Error: ", err);
+      error("Get Note Info Error: " + err);
+    }
     setShowDetails(true);
     // axios get details
     onDetailsOpen();
@@ -216,14 +280,26 @@ export default function App() {
       case "authorNickname":
         return (
           <p className="text-bold text-blue-500 text-md capitalize flex items-center gap-2">
-            <Image width={50} height={50} alt="avatar" src={note.authorAvatar} className="w-[50px] h-[50px]"></Image>
+            <Image
+              width={50}
+              height={50}
+              alt="avatar"
+              src={note.authorAvatar}
+              className="w-[50px] h-[50px]"
+            ></Image>
             {cellValue}
           </p>
         );
       case "title":
         return (
           <p className="text-bold text-blue-500 text-md capitalize flex items-center gap-2">
-            <Image width={50} height={50} alt="avatar" src={note.coverImg} className="w-[50px] h-[50px]"></Image>
+            <Image
+              width={50}
+              height={50}
+              alt="avatar"
+              src={note.coverImg}
+              className="w-[50px] h-[50px]"
+            ></Image>
             {cellValue}
           </p>
         );
@@ -560,7 +636,33 @@ export default function App() {
                   游记详情
                 </ModalHeader>
                 <ModalBody>
-                  <p>rmt</p>
+                  <div>noteTitle: {noteDetails.noteTitle}</div>
+                  <div>authorNickname: {noteDetails.authorNickname}</div>
+                  <div>lastModifyTime: {noteDetails.lastModifyTime}</div>
+                  <div>location: {noteDetails.location}</div>
+                  <div>noteContent: {noteDetails.noteContent}</div>
+                  <div>status: {noteDetails.status}</div>
+                  <div className="flex flex-wrap">
+                    {noteDetails.resources.map((resource) => {
+                      return (
+                        <>
+                          {resource.mediaType === "img" && (
+                            <Image
+                              height={50}
+                              width={50}
+                              src={resource.url}
+                              alt="img"
+                            />
+                          )}
+                          {
+                            resource.mediaType === "video"&&(
+                              <video src={resource.url} className="w-[50px] h-[50px]"></video>
+                            )
+                          }
+                        </>
+                      );
+                    })}
+                  </div>
                 </ModalBody>
                 <ModalFooter>
                   <Button color="primary" variant="light" onPress={onClose}>
