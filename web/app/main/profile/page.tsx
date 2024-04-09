@@ -1,7 +1,7 @@
 "use client";
 import useUserInfo from "../../hooks/useUserInfo";
 import { Button } from "@nextui-org/react";
-import { logoutClicked } from "../../utils/auth";
+import { logoutClicked } from "../../utils/login";
 
 const Profile = () => {
   const userInfo = useUserInfo();

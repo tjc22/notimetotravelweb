@@ -27,7 +27,7 @@ import { columns, users } from "./components/data";
 import { DeleteIcon } from "../../icons/DeleteIcon";
 import useUserInfo from "../../hooks/useUserInfo";
 import { useRouter } from "next/navigation";
-import instance from "@/app/utils/request";
+import API from "@/app/utils/api";
 import { error, success } from "@/app/utils/message";
 
 interface userType {
@@ -114,9 +114,9 @@ export default function App() {
       return sortDescriptor.direction === "descending" ? -cmp : cmp;
     });
   }, [sortDescriptor, items]);
-  
-  const [password, setPassword] = React.useState('');
-  const [username, setUsername] = React.useState('');
+
+  const [password, setPassword] = React.useState("");
+  const [username, setUsername] = React.useState("");
 
   const handleAddNew = () => {
     setShowAdd(true);
@@ -125,21 +125,26 @@ export default function App() {
 
   const handleAdd = () => {
     if (!username || !password) {
-      console.log('Username or password is empty.');
+      console.log("Username or password is empty.");
       return;
     }
 
     try {
-      instance
-        .post(`${process.env.NEXT_PUBLIC_HOST}/registerReviewer`)
+      API.AuthyServiceApi.registerReviewer({
+        username: username,
+        password: password,
+      })
         .then((res) => {
           if (res.status === 200) {
-            localStorage.setItem("Authorization", res.data.freshToken);
-            success("增加审核人员列表成功");
-          } else {
-            error("增加审核人员列表失败！");
-            if (res.status === 401) {
-              console.log(res.data?.msg);
+            if (res.data.status === 200) {
+              if (res.data.freshToken)
+                localStorage.setItem("Authorization", res.data.freshToken);
+              success("增加审核人员列表成功");
+            } else {
+              error("增加审核人员列表失败！");
+              if (res.data.status === 401) {
+                console.log(res.data?.msg);
+              }
             }
           }
         })
@@ -181,16 +186,18 @@ export default function App() {
 
   const handleDelete = () => {
     try {
-      instance
-        .get(`${process.env.NEXT_PUBLIC_HOST}/deleteReviewer`)
+      API.AuthyServiceApi.deleteReviewer({ reviewerId: arraySelected })
         .then((res) => {
           if (res.status === 200) {
-            localStorage.setItem("Authorization", res.data.freshToken);
-            success("删除审核人员列表成功");
-          } else {
-            error("删除审核人员列表失败！");
-            if (res.status === 401) {
-              console.log(res.data?.msg);
+            if (res.data.status === 200) {
+              if (res.data.freshToken)
+                localStorage.setItem("Authorization", res.data.freshToken);
+              success("删除审核人员列表成功");
+            } else {
+              error("删除审核人员列表失败！");
+              if (res.data.status === 401) {
+                console.log(res.data?.msg);
+              }
             }
           }
         })

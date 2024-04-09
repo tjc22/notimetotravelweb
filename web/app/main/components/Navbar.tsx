@@ -22,7 +22,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { success } from "@/app/utils/message";
 import Image from "next/image";
-import { logoutClicked } from "../../utils/auth";
+import { logoutClicked } from "../../utils/login";
 import useUserInfo from "../../hooks/useUserInfo";
 import { useRouter } from "next/navigation";
 import ProfileSVG from "@/app/svg/avatar.svg";

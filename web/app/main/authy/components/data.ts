@@ -1,5 +1,5 @@
 import { success, error } from "@/app/utils/message";
-import instance from "@/app/utils/request";
+import API from "@/app/utils/api";
 
 const columns = [
   { name: "ID", iid: "reviewerId" },
@@ -38,17 +38,19 @@ if (process.env.NEXT_PUBLIC_TEST === "test") {
   ];
 } else {
   try {
-    instance
-      .get(`${process.env.NEXT_PUBLIC_HOST}/getReviewerList`)
+    API.AuthyServiceApi.getReviewerList()
       .then((res) => {
         if (res.status === 200) {
-          users = res.data.reviewerList;
-          localStorage.setItem("Authorization", res.data.freshToken);
-          success("获取审核人员列表成功");
-        } else {
-          error("获取审核人员列表失败！");
-          if (res.status === 401) {
-            console.log(res.data?.msg);
+          if (res.data.status === 200) {
+            if (res.data.reviewerList) users = res.data.reviewerList;
+            if (res.data.freshToken)
+              localStorage.setItem("Authorization", res.data.freshToken);
+            success("获取审核人员列表成功");
+          } else {
+            error("获取审核人员列表失败！");
+            if (res.data.status === 401) {
+              console.log(res.data?.msg);
+            }
           }
         }
       })

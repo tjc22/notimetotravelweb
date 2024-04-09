@@ -11,21 +11,23 @@ async function signInClicked(username: string, password: string) {
       })
       .then((res) => {
         if (res.status === 200) {
-          success("登陆成功");
-          localStorage.setItem(
-            "userInfo",
-            JSON.stringify({
-              username: username,
-              permission: res.data.permission,
-              userId: res.data.reviewerId,
-            })
-          );
-          localStorage.setItem("Authorization", res.data.token);
-          return "success";
-        } else {
-          error("登录失败！");
-          if (res.status === 401) {
-            console.log(res.data?.msg);
+          if (res.data.status === 200) {
+            success("登陆成功");
+            localStorage.setItem(
+              "userInfo",
+              JSON.stringify({
+                username: username,
+                permission: res.data.permission,
+                userId: res.data.reviewerId,
+              })
+            );
+            localStorage.setItem("Authorization", res.data.token);
+            return "success";
+          } else {
+            error("登录失败！");
+            if (res.data.status === 401) {
+              console.log(res.data?.msg);
+            }
           }
         }
       })
@@ -41,8 +43,10 @@ async function signInClicked(username: string, password: string) {
 }
 
 async function logoutClicked() {
-  localStorage.removeItem("userInfo");
-  localStorage.removeItem("Authorization");
+  if (process.env.NEXT_PUBLIC_TEST !== "test") {
+    localStorage.removeItem("userInfo");
+    localStorage.removeItem("Authorization");
+  }
   window.location.href = "/";
 }
 

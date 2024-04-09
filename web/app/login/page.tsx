@@ -2,7 +2,7 @@
 
 import {
   signInClicked,
-} from '@/app/utils/auth';
+} from '@/app/utils/login';
 import {
   Button,
   Card,
