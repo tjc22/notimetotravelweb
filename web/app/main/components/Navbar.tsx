@@ -71,7 +71,7 @@ const NavBar = ({ className }: { className: string }) => {
             size="md"
             className="text-md mr-2 text-white"
           >
-            Sign out
+            退出
           </Button>
         </div>
       );
