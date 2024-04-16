@@ -5,7 +5,7 @@ async function signInClicked(username: string, password: string) {
   try {
     console.log(`${process.env.NEXT_PUBLIC_HOST}`);
     axios
-      .post(`${process.env.NEXT_PUBLIC_HOST}/login`, {
+      .post(`https://47.120.68.102/api/nofresh/moderationPlatform/login`, {
         username: username,
         password: password,
       })

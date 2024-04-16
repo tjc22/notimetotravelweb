@@ -3,7 +3,7 @@ import { error } from "./message";
 
 // Set config defaults when creating the instance
 const instance = axios.create({
-  baseURL: `${process.env.NEXT_PUBLIC_HOST}`,
+  baseURL: `${process.env.NEXT_PUBLIC_HOST}/verification`,
   timeout: 1000 * 30,
 });
 
