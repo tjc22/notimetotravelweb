@@ -3,26 +3,28 @@ import { error, success } from "./message";
 
 async function signInClicked(username: string, password: string) {
   try {
-    console.log(`${process.env.NEXT_PUBLIC_HOST}`);
+    // console.log(`${process.env.NEXT_PUBLIC_HOST}`);
+    let result='failed';
     axios
       .post(`https://47.120.68.102/api/nofresh/moderationPlatform/login`, {
         username: username,
         password: password,
       })
       .then((res) => {
+        console.log(res)
         if (res.status === 200) {
           if (res.data.status === 200) {
             success("登陆成功");
             localStorage.setItem(
-              "userInfo",
+              "xcuserInfo",
               JSON.stringify({
                 username: username,
                 permission: res.data.permission,
                 userId: res.data.reviewerId,
               })
             );
-            localStorage.setItem("Authorization", res.data.token);
-            return "success";
+            localStorage.setItem("xcAuthorization", res.data.token);
+            result= "success";
           } else {
             error("登录失败！");
             if (res.data.status === 401) {
@@ -35,7 +37,7 @@ async function signInClicked(username: string, password: string) {
         console.log("signin: ", err);
         error("Signin Error: " + err);
       });
-    return "failed";
+    return result;
   } catch (err: any) {
     console.log("signin: ", err);
     error("Signin Error: " + err);
@@ -44,8 +46,8 @@ async function signInClicked(username: string, password: string) {
 
 async function logoutClicked() {
   if (process.env.NEXT_PUBLIC_TEST !== "test") {
-    localStorage.removeItem("userInfo");
-    localStorage.removeItem("Authorization");
+    localStorage.removeItem("xcuserInfo");
+    localStorage.removeItem("xcAuthorization");
   }
   window.location.href = "/";
 }
