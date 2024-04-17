@@ -22,7 +22,7 @@ export function useUserInfo() {
       const cachedData = localStorage.getItem("xcuserInfo");
       if (cachedData) {
         const cachedUserInfo = JSON.parse(cachedData);
-        setUserInfo(cachedUserInfo.data);
+        setUserInfo(cachedUserInfo);
       }
     }
     setIsLoading(false);
