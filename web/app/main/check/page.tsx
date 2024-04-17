@@ -31,7 +31,6 @@ import { PlusIcon } from "../../icons/PlusIcon";
 import { VerticalDotsIcon } from "../../icons/VerticalDotsIcon";
 import { SearchIcon } from "../../icons/SearchIcon";
 import { ChevronDownIcon } from "../../icons/ChevronDownIcon";
-import { columns, notes, statusOptions } from "./components/data";
 import { EditIcon } from "../../icons/EditIcon";
 import { DeleteIcon } from "../../icons/DeleteIcon";
 import { EyeIcon } from "../../icons/EyeIcon";
@@ -49,6 +48,21 @@ interface noteType {
   status: "waiting" | "approved" | "disapproved" | "delete";
   uploadTime: string; //TODO:questioned
 }
+
+const columns = [
+  { name: "ID", iid: "noteId" },
+  { name: "AUTHOR", iid: "authorNickname" },
+  { name: "NOTE", iid: "title" },
+  { name: "UPLOAD TIME", iid: "uploadTime" },
+  { name: "STATUS", iid: "status" },
+  { name: "ACTIONS", iid: "actions" },
+];
+
+const statusOptions = [
+  { name: "已通过", iid: "approved" },
+  { name: "未通过", iid: "disapproved" },
+  { name: "待审核", iid: "waiting" },
+];
 
 const statusColorMap = {
   approved: "success",
@@ -77,6 +91,276 @@ export default function App() {
     }
     // console.log(userInfo);
   }, [userInfo]);
+
+  const [notes, setNotes] = React.useState<Array<{
+    noteId: number;
+    title: string;
+    coverImg: string;
+    authorNickname: string;
+    authorAvatar: string;
+    status: "waiting" | "approved" | "disapproved" | "delete";
+    uploadTime: string; //TODO:questioned
+  }>>([]);
+
+  const refreshNotes = () => {
+    if (process.env.NEXT_PUBLIC_TEST === "test") {
+      setNotes([
+        {
+          noteId: 0,
+          title: "title",
+          coverImg: "https://timelord.cn/Nicholas/img/drawing/3.jpg",
+          authorNickname: "Nicholas",
+          authorAvatar: "https://timelord.cn/Nicholas/img/drawing/3.jpg",
+          status: "approved",
+          uploadTime: "2024-02-02",
+        },
+        {
+          noteId: 1,
+          title: "title",
+          coverImg: "https://timelord.cn/Nicholas/img/drawing/3.jpg",
+          authorNickname: "Nicholas",
+          authorAvatar: "https://timelord.cn/Nicholas/img/drawing/3.jpg",
+          status: "waiting",
+          uploadTime: "2024-02-02",
+        },
+        {
+          noteId: 2,
+          title: "title",
+          coverImg: "https://timelord.cn/Nicholas/img/drawing/3.jpg",
+          authorNickname: "Nicholas",
+          authorAvatar: "https://timelord.cn/Nicholas/img/drawing/3.jpg",
+          status: "waiting",
+          uploadTime: "2024-02-02",
+        },
+        {
+          noteId: 3,
+          title: "title",
+          coverImg: "https://timelord.cn/Nicholas/img/drawing/3.jpg",
+          authorNickname: "Nicholas",
+          authorAvatar: "https://timelord.cn/Nicholas/img/drawing/3.jpg",
+          status: "disapproved",
+          uploadTime: "2024-02-02",
+        },
+        {
+          noteId: 4,
+          title: "title",
+          coverImg: "https://timelord.cn/Nicholas/img/drawing/3.jpg",
+          authorNickname: "Nicholas",
+          authorAvatar: "https://timelord.cn/Nicholas/img/drawing/3.jpg",
+          status: "waiting",
+          uploadTime: "2024-02-02",
+        },
+        {
+          noteId: 5,
+          title: "title",
+          coverImg: "https://timelord.cn/Nicholas/img/drawing/3.jpg",
+          authorNickname: "Nicholas",
+          authorAvatar: "https://timelord.cn/Nicholas/img/drawing/3.jpg",
+          status: "disapproved",
+          uploadTime: "2024-02-02",
+        },
+        {
+          noteId: 6,
+          title: "title",
+          coverImg: "https://timelord.cn/Nicholas/img/drawing/3.jpg",
+          authorNickname: "Nicholas",
+          authorAvatar: "https://timelord.cn/Nicholas/img/drawing/3.jpg",
+          status: "waiting",
+          uploadTime: "2024-02-02",
+        },
+        {
+          noteId: 7,
+          title: "title",
+          coverImg: "https://timelord.cn/Nicholas/img/drawing/3.jpg",
+          authorNickname: "Nicholas",
+          authorAvatar: "https://timelord.cn/Nicholas/img/drawing/3.jpg",
+          status: "waiting",
+          uploadTime: "2024-02-02",
+        },
+        {
+          noteId: 8,
+          title: "title",
+          coverImg: "https://timelord.cn/Nicholas/img/drawing/3.jpg",
+          authorNickname: "Nicholas",
+          authorAvatar: "https://timelord.cn/Nicholas/img/drawing/3.jpg",
+          status: "approved",
+          uploadTime: "2024-02-02",
+        },
+        {
+          noteId: 9,
+          title: "title",
+          coverImg: "https://timelord.cn/Nicholas/img/drawing/3.jpg",
+          authorNickname: "Nicholas",
+          authorAvatar: "https://timelord.cn/Nicholas/img/drawing/3.jpg",
+          status: "waiting",
+          uploadTime: "2024-02-02",
+        },
+        {
+          noteId: 10,
+          title: "title",
+          coverImg: "https://timelord.cn/Nicholas/img/drawing/3.jpg",
+          authorNickname: "Nicholas",
+          authorAvatar: "https://timelord.cn/Nicholas/img/drawing/3.jpg",
+          status: "approved",
+          uploadTime: "2024-02-02",
+        },
+        {
+          noteId: 11,
+          title: "title",
+          coverImg: "https://timelord.cn/Nicholas/img/drawing/3.jpg",
+          authorNickname: "Nicholas",
+          authorAvatar: "https://timelord.cn/Nicholas/img/drawing/3.jpg",
+          status: "waiting",
+          uploadTime: "2024-02-02",
+        },
+        {
+          noteId: 12,
+          title: "title",
+          coverImg: "https://timelord.cn/Nicholas/img/drawing/3.jpg",
+          authorNickname: "Nicholas",
+          authorAvatar: "https://timelord.cn/Nicholas/img/drawing/3.jpg",
+          status: "waiting",
+          uploadTime: "2024-02-02",
+        },
+        {
+          noteId: 13,
+          title: "title",
+          coverImg: "https://timelord.cn/Nicholas/img/drawing/3.jpg",
+          authorNickname: "Nicholas",
+          authorAvatar: "https://timelord.cn/Nicholas/img/drawing/3.jpg",
+          status: "waiting",
+          uploadTime: "2024-02-02",
+        },
+        {
+          noteId: 14,
+          title: "title",
+          coverImg: "https://timelord.cn/Nicholas/img/drawing/3.jpg",
+          authorNickname: "Nicholas",
+          authorAvatar: "https://timelord.cn/Nicholas/img/drawing/3.jpg",
+          status: "disapproved",
+          uploadTime: "2024-02-02",
+        },
+        {
+          noteId: 15,
+          title: "title",
+          coverImg: "https://timelord.cn/Nicholas/img/drawing/3.jpg",
+          authorNickname: "Nicholas",
+          authorAvatar: "https://timelord.cn/Nicholas/img/drawing/3.jpg",
+          status: "approved",
+          uploadTime: "2024-02-02",
+        },
+        {
+          noteId: 16,
+          title: "title",
+          coverImg: "https://timelord.cn/Nicholas/img/drawing/3.jpg",
+          authorNickname: "Nicholas",
+          authorAvatar: "https://timelord.cn/Nicholas/img/drawing/3.jpg",
+          status: "approved",
+          uploadTime: "2024-02-02",
+        },
+        {
+          noteId: 17,
+          title: "title",
+          coverImg: "https://timelord.cn/Nicholas/img/drawing/3.jpg",
+          authorNickname: "Nicholas",
+          authorAvatar: "https://timelord.cn/Nicholas/img/drawing/3.jpg",
+          status: "waiting",
+          uploadTime: "2024-02-02",
+        },
+        {
+          noteId: 18,
+          title: "title",
+          coverImg: "https://timelord.cn/Nicholas/img/drawing/3.jpg",
+          authorNickname: "Nicholas",
+          authorAvatar: "https://timelord.cn/Nicholas/img/drawing/3.jpg",
+          status: "disapproved",
+          uploadTime: "2024-02-02",
+        },
+        {
+          noteId: 19,
+          title: "title",
+          coverImg: "https://timelord.cn/Nicholas/img/drawing/3.jpg",
+          authorNickname: "Nicholas",
+          authorAvatar: "https://timelord.cn/Nicholas/img/drawing/3.jpg",
+          status: "approved",
+          uploadTime: "2024-02-02",
+        },
+        {
+          noteId: 20,
+          title: "title",
+          coverImg: "https://timelord.cn/Nicholas/img/drawing/3.jpg",
+          authorNickname: "Nicholas",
+          authorAvatar: "https://timelord.cn/Nicholas/img/drawing/3.jpg",
+          status: "waiting",
+          uploadTime: "2024-02-02",
+        },
+        {
+          noteId: 21,
+          title: "title",
+          coverImg: "https://timelord.cn/Nicholas/img/drawing/3.jpg",
+          authorNickname: "Nicholas",
+          authorAvatar: "https://timelord.cn/Nicholas/img/drawing/3.jpg",
+          status: "approved",
+          uploadTime: "2024-02-02",
+        },
+        {
+          noteId: 22,
+          title: "title",
+          coverImg: "https://timelord.cn/Nicholas/img/drawing/3.jpg",
+          authorNickname: "Nicholas",
+          authorAvatar: "https://timelord.cn/Nicholas/img/drawing/3.jpg",
+          status: "waiting",
+          uploadTime: "2024-02-02",
+        },
+        {
+          noteId: 23,
+          title: "title",
+          coverImg: "https://timelord.cn/Nicholas/img/drawing/3.jpg",
+          authorNickname: "Nicholas",
+          authorAvatar: "https://timelord.cn/Nicholas/img/drawing/3.jpg",
+          status: "disapproved",
+          uploadTime: "2024-02-02",
+        },
+      ]);
+    } else {
+      try {
+        API.CheckServiceApi.getNoteList()
+          .then((res) => {
+            if (res.status === 200) {
+              if (res.data.status === 200) {
+                if (res.data.noteList) setNotes(res.data.noteList);
+                if (res.data.freshToken)
+                  localStorage.setItem("xcAuthorization", res.data.freshToken);
+              } else {
+                error("获取游记列表失败！");
+                if (res.data.status === 401) {
+                  console.log(res.data?.msg);
+                  if (res.data?.msg === 'Authentication expires.') {
+                    error("登录已过期，请重新登录！");
+                    if (process.env.NEXT_PUBLIC_TEST !== "test") {
+                      localStorage.removeItem("xcuserInfo");
+                      localStorage.removeItem("xcAuthorization");
+                    }
+                    window.location.href = "/login";
+                  }
+                }
+              }
+            }
+          })
+          .catch((err: any) => {
+            console.log("Get Note List Error: ", err);
+            error("Get Note List Error: " + err);
+          });
+      } catch (err: any) {
+        console.log("Get Note List Error: ", err);
+        error("Get Note List Error: " + err);
+      }
+    }
+  }
+
+  useEffect(() => {
+    refreshNotes();
+  }, []);
 
   // final selected
   const [arraySelected, setArraySelected] = React.useState([0]);
@@ -141,7 +425,7 @@ export default function App() {
     }
 
     return filteredNotes;
-  }, [notes, filterValue, statusFilter,isSearchName]);
+  }, [notes, filterValue, statusFilter, isSearchName]);
 
   const headerColumns = React.useMemo(() => {
     if (
@@ -283,6 +567,8 @@ export default function App() {
     } catch (err: any) {
       console.log(`${en} Error: `, err);
       error(`${en} Error: ` + err);
+    } finally {
+      refreshNotes();
     }
   }
 

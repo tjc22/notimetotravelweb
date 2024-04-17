@@ -1,5 +1,5 @@
 "use client";
-import React, { Key, useEffect } from "react";
+import React, { Key, useEffect, useState } from "react";
 import {
   Table,
   TableHeader,
@@ -23,7 +23,6 @@ import {
   useDisclosure,
 } from "@nextui-org/react";
 import { SearchIcon } from "../../icons/SearchIcon";
-import { columns, users } from "./components/data";
 import { DeleteIcon } from "../../icons/DeleteIcon";
 import useUserInfo from "../../hooks/useUserInfo";
 import { useRouter } from "next/navigation";
@@ -34,6 +33,12 @@ interface userType {
   reviewerId: number;
   username: string;
 }
+
+const columns = [
+  { name: "ID", iid: "reviewerId" },
+  { name: "NAME", iid: "username" },
+  { name: "ACTIONS", iid: "actions" },
+];
 
 export default function App() {
   const router = useRouter();
@@ -48,6 +53,77 @@ export default function App() {
       }
     }
   }, [userInfo]);
+
+  const [users, setUsers] = useState<Array<{ reviewerId: number; username: string }>>([]);
+
+  const refreshUsers = () => {
+    if (process.env.NEXT_PUBLIC_TEST === "test") {
+      setUsers([
+        {
+          reviewerId: 0,
+          username: "nich",
+        },
+        {
+          reviewerId: 1,
+          username: "nich",
+        },
+        {
+          reviewerId: 2,
+          username: "nich",
+        },
+        {
+          reviewerId: 3,
+          username: "nich",
+        },
+        {
+          reviewerId: 4,
+          username: "nich",
+        },
+        {
+          reviewerId: 5,
+          username: "nich",
+        },
+      ]);
+    } else {
+      try {
+        API.AuthyServiceApi.getReviewerList()
+          .then((res) => {
+            console.log(res)
+            if (res.status === 200) {
+              if (res.data.status === 200) {
+                if (res.data.reviewerList) setUsers(res.data.reviewerList);
+                if (res.data.freshToken)
+                  localStorage.setItem("xcAuthorization", res.data.freshToken);
+              } else {
+                error("获取审核人员列表失败！");
+                if (res.data.status === 401) {
+                  console.log(res.data?.msg);
+                  if (res.data?.msg === 'Authentication expires.') {
+                    error("登录已过期，请重新登录！");
+                    if (process.env.NEXT_PUBLIC_TEST !== "test") {
+                      localStorage.removeItem("xcuserInfo");
+                      localStorage.removeItem("xcAuthorization");
+                    }
+                    window.location.href = "/login";
+                  }
+                }
+              }
+            }
+          })
+          .catch((err: any) => {
+            console.log("Get Reviewer List Error: ", err);
+            error("Get Reviewer List Error: " + err);
+          });
+      } catch (err: any) {
+        console.log("Get Reviewer List Error: ", err);
+        error("Get Reviewer List Error: " + err);
+      }
+    }
+  }
+
+  useEffect(() => {
+    refreshUsers();
+  }, []);
 
   // input value
   const [filterValue, setFilterValue] = React.useState("");
@@ -164,7 +240,7 @@ export default function App() {
       console.log("Add Reviewer Error: ", err);
       error("Add Reviewer Error: " + err);
     } finally {
-      router.refresh();
+      refreshUsers();
     }
   };
 
@@ -225,7 +301,7 @@ export default function App() {
       console.log("Delete Reviewer Error: ", err);
       error("Delete Reviewer Error: " + err);
     } finally {
-      router.refresh();
+      refreshUsers();
     }
   };
 
