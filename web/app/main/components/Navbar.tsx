@@ -46,7 +46,7 @@ const NavBar = ({ className }: { className: string }) => {
   let isLogin = true;
   useEffect(() => {
     if (userInfo) {
-      // console.log(userInfo);
+      console.log(userInfo);
       if (userInfo.userName === "None") {
         isLogin = false;
         onOpen();

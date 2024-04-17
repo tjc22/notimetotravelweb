@@ -19,7 +19,7 @@ export function useUserInfo() {
         permission: "admin",
       });
     } else {
-      const cachedData = localStorage.getItem("userInfo");
+      const cachedData = localStorage.getItem("xcuserInfo");
       if (cachedData) {
         const cachedUserInfo = JSON.parse(cachedData);
         setUserInfo(cachedUserInfo.data);
