@@ -326,6 +326,7 @@ export default function App() {
       try {
         API.CheckServiceApi.getNoteList()
           .then((res) => {
+            console.log(res);
             if (res.status === 200) {
               if (res.data.status === 200) {
                 if (res.data.noteList) setNotes(res.data.noteList);
@@ -359,7 +360,9 @@ export default function App() {
   }
 
   useEffect(() => {
+    console.log("refresh notes");
     refreshNotes();
+    console.log(notes);
   }, []);
 
   // final selected
@@ -378,7 +381,7 @@ export default function App() {
   // rows per page
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [sortDescriptor, setSortDescriptor] = React.useState({
-    column: "time",
+    column: "uploadTime",
     direction: "ascending",
   });
   const [page, setPage] = React.useState(1);
