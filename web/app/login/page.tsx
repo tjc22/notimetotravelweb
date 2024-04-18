@@ -33,7 +33,7 @@ const Login = () => {
               localStorage.setItem(
                 "xcuserInfo",
                 JSON.stringify({
-                  username: username,
+                  userName: username,
                   permission: res.data.permission,
                   userId: res.data.reviewerId,
                 })
